@@ -6,28 +6,24 @@
 package com.igorsandler.demo1.shoppingcart.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.igorsandler.demo1.shoppingcart.client.ProductClient;
 import com.igorsandler.demo1.shoppingcart.model.Product;
-import com.igorsandler.demo1.shoppingcart.model.ProductHalResponse;
 import com.igorsandler.demo1.shoppingcart.model.ShoppingCartEntry;
 import com.igorsandler.demo1.shoppingcart.model.ShoppingCartEntryDetails;
 import com.igorsandler.demo1.shoppingcart.model.ShoppingCartPk;
 import com.igorsandler.demo1.shoppingcart.repo.ShoppingCartRepository;
-import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.hateoas.Resources;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  *
@@ -40,8 +36,10 @@ public class ShoppingCardService
     @Autowired
     ShoppingCartRepository shoppingCartRepo;
 
+    ObjectMapper mapper = new ObjectMapper();
+
     @Autowired
-    ObjectMapper mapper;
+    ProductClient productClient;
 
 //    @Autowired
 //    private DiscoveryClient discoveryClient;
@@ -134,46 +132,25 @@ public class ShoppingCardService
                         .stream(scEntires.spliterator(), false)
                         .collect(Collectors.toMap(sce -> sce.getProductId(), sce -> sce));
 
-                HttpHeaders headers = new HttpHeaders();
-                headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-
-                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://product-service/products/search/findByProductIdIn")
-                        .queryParam("ids", productIds.toArray());
-
-                URI uri = builder.build().encode().toUri();
-
-                HttpEntity<?> entity = new HttpEntity<>(headers);
-
-                HttpEntity<String> response = restTemplate.exchange(
-                        uri,
-                        HttpMethod.GET,
-                        entity,
-                        String.class);
-
-                String body = response.getBody();
-
-                if (body != null)
+                Resources<Product> productsResponse = productClient.getProductsByIds(productIds.toArray());
+                Collection<Product> products = productsResponse.getContent();
+                if (!CollectionUtils.isEmpty(products))
                 {
-                    ProductHalResponse resp = mapper.readValue(body, ProductHalResponse.class);
-                    List<Product> products = resp.getEmbedded().getProducts();
-                    if (!CollectionUtils.isEmpty(products))
-                    {
-                        result = products.stream()
-                                .map(product
-                                        -> 
-                                        {
-                                            ShoppingCartEntry sce = mapShoppingCartEntryByProductId.get(product.getProductId());
-                                            ShoppingCartEntryDetails scde = new ShoppingCartEntryDetails();
-                                            scde.setProductId(product.getProductId());
-                                            scde.setProductName(product.getName());
-                                            scde.setProductPrice(product.getPrice());
-                                            scde.setProductDescription(product.getDescription());
-                                            scde.setCustomerId(customerId);
-                                            scde.setQuantity(sce.getQuantity());
-                                            return scde;
-                                })
-                                .collect(Collectors.toList());
-                    }
+                    result = products.stream()
+                            .map(product
+                                    -> 
+                                    {
+                                        ShoppingCartEntry sce = mapShoppingCartEntryByProductId.get(product.getProductId());
+                                        ShoppingCartEntryDetails scde = new ShoppingCartEntryDetails();
+                                        scde.setProductId(product.getProductId());
+                                        scde.setProductName(product.getName());
+                                        scde.setProductPrice(product.getPrice());
+                                        scde.setProductDescription(product.getDescription());
+                                        scde.setCustomerId(customerId);
+                                        scde.setQuantity(sce.getQuantity());
+                                        return scde;
+                            })
+                            .collect(Collectors.toList());
                 }
             }
         }

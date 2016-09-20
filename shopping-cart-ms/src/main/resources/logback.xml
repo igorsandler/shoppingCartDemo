@@ -36,8 +36,14 @@
         <OnMatch>DENY</OnMatch>
     </turboFilter>
   
+    <logger name="feign" level="debug"
+            additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+  
     <root level="INFO">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="GENERAL" />
     </root>
+
 </configuration>
