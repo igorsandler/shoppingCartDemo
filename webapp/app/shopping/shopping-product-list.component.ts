@@ -61,10 +61,10 @@ export class ShoppingProductListComponent implements OnInit {
    
    addToShoppingCart(productId: string) : void
    {
-       console.log("removeProduct: "+productId);
+       console.log("addToShoppingCart: "+productId);
        this._shoppingCartService.addProduct(this.customerId,productId)
          .subscribe(
-                response => this.refresh(),
+                response => {;},
                 error => this.errorMessage = <any>error);
    } 
    

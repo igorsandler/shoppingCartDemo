@@ -7,6 +7,7 @@ package com.igorsandler.demo1.product.repo;
 
 import com.igorsandler.demo1.product.model.Product;
 import java.util.List;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -17,6 +18,6 @@ import org.springframework.data.repository.query.Param;
 public interface ProductRepository
         extends PagingAndSortingRepository<Product, String>
 {
-    //@Query( "select o from Product o where productId in :ids" )
+    @Query( "select o from Product o where productId in (:ids)" )
     List<Product> findByProductIdIn(@Param("ids") List<String> productIds);
 }

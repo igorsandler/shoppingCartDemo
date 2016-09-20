@@ -60,9 +60,9 @@ System.register(['angular2/core', '../products/product.service', 'angular2/route
                 };
                 ShoppingProductListComponent.prototype.addToShoppingCart = function (productId) {
                     var _this = this;
-                    console.log("removeProduct: " + productId);
+                    console.log("addToShoppingCart: " + productId);
                     this._shoppingCartService.addProduct(this.customerId, productId)
-                        .subscribe(function (response) { return _this.refresh(); }, function (error) { return _this.errorMessage = error; });
+                        .subscribe(function (response) { ; }, function (error) { return _this.errorMessage = error; });
                 };
                 ShoppingProductListComponent.prototype.onBack = function () {
                     this._router.navigate(['ShoppingCart', { customerId: this.customerId }]);

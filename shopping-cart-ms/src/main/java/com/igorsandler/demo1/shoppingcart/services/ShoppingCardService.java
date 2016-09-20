@@ -68,12 +68,12 @@ public class ShoppingCardService
     {
         shoppingCartRepo.removeByCustomerId(customerId); // Dummy operation, should be replaced with real purchase workflow
     }
-    
+
     public void clean(String customerId)
     {
         shoppingCartRepo.removeByCustomerId(customerId);
     }
-    
+
     public ShoppingCartEntry addProduct(String customerId, String productId)
     {
         ShoppingCartPk pk = new ShoppingCartPk();
@@ -140,49 +140,54 @@ public class ShoppingCardService
                     .map(sce -> sce.getProductId())
                     .collect(Collectors.toList());
 
-            Map<String, ShoppingCartEntry> mapShoppingCartEntryByProductId = StreamSupport
-                    .stream(scEntires.spliterator(), false)
-                    .collect(Collectors.toMap(sce -> sce.getProductId(), sce -> sce));
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(proxyUrl)
-                    .queryParam("ids", productIds);
-
-            URI uri = builder.build().encode().toUri();
-
-            HttpEntity<?> entity = new HttpEntity<>(headers);
-
-            HttpEntity<String> response = restTemplate.exchange(
-                    uri,
-                    HttpMethod.GET,
-                    entity,
-                    String.class);
-
-            String body = response.getBody();
-
-            if (body != null)
+            if (!CollectionUtils.isEmpty(productIds))
             {
-                ProductHalResponse resp = mapper.readValue(body, ProductHalResponse.class);
-                List<Product> products = resp.getEmbedded().getProducts();
-                if (!CollectionUtils.isEmpty(products))
+                Map<String, ShoppingCartEntry> mapShoppingCartEntryByProductId = StreamSupport
+                        .stream(scEntires.spliterator(), false)
+                        .collect(Collectors.toMap(sce -> sce.getProductId(), sce -> sce));
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(proxyUrl)
+                        .queryParam("ids", productIds.toArray());
+
+                URI uri1 = builder.build().toUri();
+
+                URI uri = builder.build().encode().toUri();
+
+                HttpEntity<?> entity = new HttpEntity<>(headers);
+
+                HttpEntity<String> response = restTemplate.exchange(
+                        uri,
+                        HttpMethod.GET,
+                        entity,
+                        String.class);
+
+                String body = response.getBody();
+
+                if (body != null)
                 {
-                    result = products.stream()
-                            .map(product
-                                    -> 
-                                    {
-                                        ShoppingCartEntry sce = mapShoppingCartEntryByProductId.get(product.getProductId());
-                                        ShoppingCartEntryDetails scde = new ShoppingCartEntryDetails();
-                                        scde.setProductId(product.getProductId());
-                                        scde.setProductName(product.getName());
-                                        scde.setProductPrice(product.getPrice());
-                                        scde.setProductDescription(product.getDescription());
-                                        scde.setCustomerId(customerId);
-                                        scde.setQuantity(sce.getQuantity());
-                                        return scde;
-                            })
-                            .collect(Collectors.toList());
+                    ProductHalResponse resp = mapper.readValue(body, ProductHalResponse.class);
+                    List<Product> products = resp.getEmbedded().getProducts();
+                    if (!CollectionUtils.isEmpty(products))
+                    {
+                        result = products.stream()
+                                .map(product
+                                        -> 
+                                        {
+                                            ShoppingCartEntry sce = mapShoppingCartEntryByProductId.get(product.getProductId());
+                                            ShoppingCartEntryDetails scde = new ShoppingCartEntryDetails();
+                                            scde.setProductId(product.getProductId());
+                                            scde.setProductName(product.getName());
+                                            scde.setProductPrice(product.getPrice());
+                                            scde.setProductDescription(product.getDescription());
+                                            scde.setCustomerId(customerId);
+                                            scde.setQuantity(sce.getQuantity());
+                                            return scde;
+                                })
+                                .collect(Collectors.toList());
+                    }
                 }
             }
         }
