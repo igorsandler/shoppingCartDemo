@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: ROUTER-SERVICE 
+    
+          
+ribbon:
+    eureka:
+        enabled: true          

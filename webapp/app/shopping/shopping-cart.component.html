@@ -1,0 +1,36 @@
+<div class='panel panel-primary'>
+    <div class='panel-heading'>
+        {{pageTitle}}<span style="float: right;" *ngIf='customerTitle'><b>{{customerTitle}}</b></span>
+    </div>
+    <div class='panel-body'>
+        <div class='table-responsive'>
+            <table class='table' *ngIf='shoppingCartEntries && shoppingCartEntries.length'>
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Actions</th>
+                     </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor='#e of shoppingCartEntries'>
+                        <td>{{ e.productName}}</td>
+                        <td>{{ e.productDescription}}</td>
+                        <td>{{ e.productPrice | currency:'CAD':true:'1.2-2'}}</td>
+                        <td>{{ e.quantity}}</td>
+                        <td>
+                            <a class='btn btn-default' (click)='addProduct(e.productId)' style='width:40px'>+</a>
+                            <a class='btn btn-default' (click)='removeProduct(e.productId)' style='width:40px'>-</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>    
+    <div class='panel-footer'>
+            <a class='btn btn-default' [routerLink]="['ShoppingCartProducts',{customerId : customerId}]" style='width:150px'>Add Product</a>
+            <span style="float: right;">Total: {{ totalPrice | currency:'CAD':true:'1.2-2'}}</span>
+    </div>
+</div>

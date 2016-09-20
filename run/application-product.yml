@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: PRODUCT-SERVICE  
+ 
+  datasource:
+    url: jdbc:postgresql://localhost:5432/eth1
+    username: postgres
+    password: norcent
+    
+  data:
+    rest:
+        returnBodyOnCreate: true
+        returnBodyOnupdate: true
+        
+server:
+  port: 9001
+
+info:
+    app:
+        name: Product Management Microservice
+        groupId: com.igorsandler.demo1
+        artifactId: product-ms
+        version: 1.0.0.1
+        encoding: UTF-8
+        java:
+            source: 1.8.0_45
+            target: 1.8.0_45        
+
+eureka:
+  client:
+     healthcheck:
+        enabled: true
+     serviceUrl:
+        defaultZone: http://eureka.peer2:8762/eureka,http://eureka.peer1:8761/eureka
+

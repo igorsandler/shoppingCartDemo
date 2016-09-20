@@ -1,0 +1,43 @@
+<div class='panel panel-primary'>
+    <div class='panel-heading'>
+        {{pageTitle}}
+    </div>
+    <div class='panel-footer'>
+        <a class='btn btn-default' (click)='loadPrevPage()' style='width:60px'>&lt;&lt;&lt;</a>
+        <a class='btn btn-default' (click)='loadNextPage()' style='width:60px'>&gt;&gt;&gt;</a>
+        <a class='btn btn-default' (click)='refresh()' style='width:80px'>Refresh</a>
+        <a class='btn btn-default' (click)='onBack()' style='width:200px'>Back To Shopping Cart</a>
+        <span style="float: right;">Page: {{pageNumber}}</span>
+    </div>
+    <div class='panel-body'>
+        <div class='table-responsive'>
+            <table class='table' *ngIf='products && products.length'>
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                     </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor='#product of products'>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.description}}</td>
+                        <td>{{ product.price | currency:'CAD':true:'1.2-2'}}</td>
+                        <td>
+                            <a class='btn btn-default' (click)='addToShoppingCart(product.productId)' style='width:80px'>Add</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>    
+    <div class='panel-footer'>
+        <a class='btn btn-default' (click)='loadPrevPage()' style='width:60px'>&lt;&lt;&lt;</a>
+        <a class='btn btn-default' (click)='loadNextPage()' style='width:60px'>&gt;&gt;&gt;</a>
+        <a class='btn btn-default' (click)='refresh()' style='width:80px'>Refresh</a>
+        <a class='btn btn-default' (click)='onBack()' style='width:200px'>Back To Shopping Cart</a>
+        <span style="float: right;">Page: {{pageNumber}}</span>
+    </div>
+</div>

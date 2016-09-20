@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: PRODUCT-SERVICE  
+    
+  datasource:
+    url: jdbc:postgresql://localhost:5432/eth1
+    username: postgres
+    password: norcent
+    
+  data:
+    rest:
+        returnBodyOnCreate: true
+        returnBodyOnupdate: true
+        
+        
+info:
+    app:
+        name: Product Management Microservice
+        groupId: @project.groupId@
+        artifactId: @project.artifactId@
+        version: @project.version@
+        encoding: @project.build.sourceEncoding@
+        java:
+            source: @java.version@
+            target: @java.version@        
+
+eureka:
+  client:
+    healthcheck:
+      enabled: true

@@ -1,0 +1,5 @@
+registry 1:   8761
+registry 2:   8762
+router:	      9000		      		
+product:      901X
+customer:     902X

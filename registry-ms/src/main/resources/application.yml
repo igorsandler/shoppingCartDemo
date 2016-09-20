@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: REGISTRY-SERVICE  
+
+server:
+  port: ${PORT:8761}
+
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    server:
+        waitTimeInMsWhenSyncEmpty: 0
+    
+    
+          

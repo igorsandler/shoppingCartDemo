@@ -1,0 +1,49 @@
+<div class='panel panel-primary'>
+    <div class='panel-heading'>
+        {{pageTitle}}
+    </div>
+    <div class='panel-footer'>
+        <a class='btn btn-default' (click)='loadPrevPage()' style='width:60px'>&lt;&lt;&lt;</a>
+        <a class='btn btn-default' (click)='loadNextPage()' style='width:60px'>&gt;&gt;&gt;</a>
+        <a class='btn btn-default' (click)='refresh()' style='width:80px'>Refresh</a>
+        <a class='btn btn-default' [routerLink]="['ProductNewForm']" style='width:150px'>Add Product</a>
+        <span style="float: right;">Page: {{pageNumber}}</span>
+    </div>
+    <div class='panel-body'>
+        <div class='table-responsive'>
+            <table class='table' *ngIf='products && products.length'>
+                <thead>
+                    <tr>
+                        <th>Product Id</th>
+                        <th>Product Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                     </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor='#product of products'>
+                        <td>
+                             <a [routerLink]="['ProductDetail', { id: product.productId}]">
+                               {{product.productId}}
+                            </a>
+                        </td>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.description}}</td>
+                        <td>{{ product.price | currency:'CAD':true:'1.2-2'}}</td>
+                        <td>
+                            <a class='btn btn-default' (click)='deleteProduct(product.productId)' style='width:80px'>Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>    
+    <div class='panel-footer'>
+        <a class='btn btn-default' (click)='loadPrevPage()' style='width:60px'>&lt;&lt;&lt;</a>
+        <a class='btn btn-default' (click)='loadNextPage()' style='width:60px'>&gt;&gt;&gt;</a>
+        <a class='btn btn-default' (click)='refresh()' style='width:80px'>Refresh</a>
+        <a class='btn btn-default' [routerLink]="['ProductNewForm']" style='width:150px'>Add Product</a>
+        <span style="float: right;">Page: {{pageNumber}}</span>
+    </div>
+</div>

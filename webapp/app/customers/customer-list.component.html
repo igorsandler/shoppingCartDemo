@@ -1,0 +1,43 @@
+<div class='panel panel-primary'>
+    <div class='panel-heading'>
+        {{pageTitle}}
+    </div>
+    <div class='panel-footer'>
+        <a class='btn btn-default' (click)='loadPrevPage()' style='width:60px'>&lt;&lt;&lt;</a>
+        <a class='btn btn-default' (click)='loadNextPage()' style='width:60px'>&gt;&gt;&gt;</a>
+        <a class='btn btn-default' (click)='refresh()' style='width:80px'>Refresh</a>
+        <a class='btn btn-default' [routerLink]="['CustomerNewForm']" style='width:150px'>Add Customer</a>
+        <span style="float: right;">Page: {{pageNumber}}</span>
+    </div>
+    <div class='panel-body'>
+        <div class='table-responsive'>
+            <table class='table' *ngIf='customers && customers.length'>
+                <thead>
+                    <tr>
+                        <th>Customer Id</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Actions</th>
+                     </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor='#customer of customers'>
+                        <td>{{ customer.customerId }}</td>
+                        <td>{{ customer.firstName}}</td>
+                        <td>{{ customer.lastName}}</td>
+                        <td>
+                            <a class='btn btn-default' (click)='deleteCustomer(customer.customerId)' style='width:80px'>Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>    
+    <div class='panel-footer'>
+        <a class='btn btn-default' (click)='loadPrevPage()' style='width:60px'>&lt;&lt;&lt;</a>
+        <a class='btn btn-default' (click)='loadNextPage()' style='width:60px'>&gt;&gt;&gt;</a>
+        <a class='btn btn-default' (click)='refresh()' style='width:80px'>Refresh</a>
+        <a class='btn btn-default' [routerLink]="['CustomerNewForm']" style='width:150px'>Add Customer</a>
+        <span style="float: right;">Page: {{pageNumber}}</span>
+    </div>
+</div>
