@@ -20,8 +20,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -45,23 +43,14 @@ public class ShoppingCardService
     @Autowired
     ObjectMapper mapper;
 
+//    @Autowired
+//    private DiscoveryClient discoveryClient;
     @Autowired
-    private DiscoveryClient discoveryClient;
-
-    String proxyUrl;
+    private RestTemplate restTemplate;
 
     @PostConstruct
     public void postConstructor() throws Exception
     {
-        List<ServiceInstance> proxyList = discoveryClient.getInstances("ROUTER-SERVICE");
-        if (proxyList.isEmpty())
-        {
-            throw new Exception("No proxy service is found!");
-        }
-
-        ServiceInstance proxy = proxyList.get(0);
-        proxyUrl = String.format("%s/product-service/products/search/findByProductIdIn",
-                proxy.getUri().toString());
     }
 
     public void purchase(String customerId)
@@ -130,7 +119,6 @@ public class ShoppingCardService
 
     public Iterable<ShoppingCartEntryDetails> getAllProducts(String customerId) throws Exception
     {
-        RestTemplate restTemplate = new RestTemplate();
         List<ShoppingCartEntryDetails> result = new ArrayList<>();
         Iterable<ShoppingCartEntry> scEntires = shoppingCartRepo.findByCustomerId(customerId);
         if (scEntires != null)
@@ -149,10 +137,8 @@ public class ShoppingCardService
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
-                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(proxyUrl)
+                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://product-service/products/search/findByProductIdIn")
                         .queryParam("ids", productIds.toArray());
-
-                URI uri1 = builder.build().toUri();
 
                 URI uri = builder.build().encode().toUri();
 
