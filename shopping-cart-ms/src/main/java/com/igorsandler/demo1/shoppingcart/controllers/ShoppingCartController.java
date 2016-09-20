@@ -5,6 +5,7 @@
  */
 package com.igorsandler.demo1.shoppingcart.controllers;
 
+import com.igorsandler.demo1.shoppingcart.model.Ack;
 import com.igorsandler.demo1.shoppingcart.model.ShoppingCartEntry;
 import com.igorsandler.demo1.shoppingcart.model.ShoppingCartEntryDetails;
 import com.igorsandler.demo1.shoppingcart.services.ShoppingCardService;
@@ -63,5 +64,27 @@ public class ShoppingCartController
     public Iterable<ShoppingCartEntryDetails> getAll(@PathVariable() String customerId) throws Exception
     {
         return shoppingCartService.getAllProducts(customerId);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value =
+    {
+        "/{customerId}/purchase"
+    }, method = RequestMethod.GET)
+    public Ack purchase(@PathVariable() String customerId) throws Exception
+    {
+        shoppingCartService.purchase(customerId);
+         return new Ack(true);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value =
+    {
+        "/{customerId}/clean"
+    }, method = RequestMethod.GET)
+    public Ack clean(@PathVariable() String customerId) throws Exception
+    {
+        shoppingCartService.clean(customerId);
+        return new Ack(true);
     }
 }

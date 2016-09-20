@@ -15,7 +15,7 @@ export class ShoppingCartService
 
     getContent(customerId : string): Observable<IShoppingCartDetailsEntry[]> 
     {       
-        return this._http.get(this._url+"/"+customerId)
+        return this._http.get(this._url+customerId)
             .map((response: Response) => <IShoppingCartDetailsEntry[]>response.json())
             .do(data => console.log("getContent: " +  JSON.stringify(data)))
             .catch(this.handleError);
@@ -23,7 +23,7 @@ export class ShoppingCartService
     
     addProduct(customerId : string,productId : string): Observable<IShoppingCartEntry> 
     {       
-       return this._http.get(this._url+"/"+customerId+"/add?productId="+productId)
+       return this._http.get(this._url+customerId+"/add?productId="+productId)
             .map((response: Response) => <IShoppingCartEntry>response.json())
             .do(data => console.log("getContent: " +  JSON.stringify(data)))
             .catch(this.handleError);
@@ -31,9 +31,23 @@ export class ShoppingCartService
     
     removeProduct(customerId : string,productId : string): Observable<IShoppingCartEntry> 
     {       
-        return this._http.get(this._url+"/"+customerId+"/remove?productId="+productId)
+        return this._http.get(this._url+customerId+"/remove?productId="+productId)
             .map((response: Response) => <IShoppingCartEntry>response.json())
             .do(data => console.log("getContent: " +  JSON.stringify(data)))
+            .catch(this.handleError);
+    }
+    
+    purchase(customerId : string): Observable<Response> 
+    {       
+        return this._http.get(this._url+customerId+"/purchase")
+            .map((response: Response) => <Response>response.json())
+            .catch(this.handleError);
+    }
+    
+    cancel(customerId : string): Observable<Response> 
+    {       
+        return this._http.get(this._url+customerId+"/clean")
+            .map((response: Response) => <Response>response.json())
             .catch(this.handleError);
     }
     

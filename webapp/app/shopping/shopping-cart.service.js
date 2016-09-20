@@ -30,21 +30,31 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable'], function(
                     this._url = 'http://localhost:9000/shopping-cart-service/';
                 }
                 ShoppingCartService.prototype.getContent = function (customerId) {
-                    return this._http.get(this._url + "/" + customerId)
+                    return this._http.get(this._url + customerId)
                         .map(function (response) { return response.json(); })
                         .do(function (data) { return console.log("getContent: " + JSON.stringify(data)); })
                         .catch(this.handleError);
                 };
                 ShoppingCartService.prototype.addProduct = function (customerId, productId) {
-                    return this._http.get(this._url + "/" + customerId + "/add?productId=" + productId)
+                    return this._http.get(this._url + customerId + "/add?productId=" + productId)
                         .map(function (response) { return response.json(); })
                         .do(function (data) { return console.log("getContent: " + JSON.stringify(data)); })
                         .catch(this.handleError);
                 };
                 ShoppingCartService.prototype.removeProduct = function (customerId, productId) {
-                    return this._http.get(this._url + "/" + customerId + "/remove?productId=" + productId)
+                    return this._http.get(this._url + customerId + "/remove?productId=" + productId)
                         .map(function (response) { return response.json(); })
                         .do(function (data) { return console.log("getContent: " + JSON.stringify(data)); })
+                        .catch(this.handleError);
+                };
+                ShoppingCartService.prototype.purchase = function (customerId) {
+                    return this._http.get(this._url + customerId + "/purchase")
+                        .map(function (response) { return response.json(); })
+                        .catch(this.handleError);
+                };
+                ShoppingCartService.prototype.cancel = function (customerId) {
+                    return this._http.get(this._url + customerId + "/clean")
+                        .map(function (response) { return response.json(); })
                         .catch(this.handleError);
                 };
                 ShoppingCartService.prototype.handleError = function (error) {

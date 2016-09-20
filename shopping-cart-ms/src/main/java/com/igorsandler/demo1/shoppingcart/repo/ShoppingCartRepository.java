@@ -8,6 +8,7 @@ package com.igorsandler.demo1.shoppingcart.repo;
 import com.igorsandler.demo1.shoppingcart.model.ShoppingCartEntry;
 import com.igorsandler.demo1.shoppingcart.model.ShoppingCartPk;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -21,6 +22,10 @@ public interface ShoppingCartRepository
             String customerId,
             String productId);
 
+    
     Iterable<ShoppingCartEntry> findByCustomerId(String customerId);
+    
+    @Transactional
+    void removeByCustomerId(String customerId);
 
 }

@@ -75,8 +75,26 @@ export class ShoppingCartComponent implements OnInit {
    
    addProduct(productId: string) : void
    {
-       console.log("removeProduct: "+productId);
+       console.log("addProduct: "+productId);
        this._shoppingCartService.addProduct(this.customerId,productId)
+         .subscribe(
+                response => this.refresh(),
+                error => this.errorMessage = <any>error);
+   } 
+   
+   purchase() : void
+   {
+       console.log("purchase");
+       this._shoppingCartService.purchase(this.customerId)
+         .subscribe(
+                response => this.refresh(),
+                error => this.errorMessage = <any>error);
+   } 
+   
+   cancel() : void
+   {
+       console.log("purchase");
+       this._shoppingCartService.cancel(this.customerId)
          .subscribe(
                 response => this.refresh(),
                 error => this.errorMessage = <any>error);

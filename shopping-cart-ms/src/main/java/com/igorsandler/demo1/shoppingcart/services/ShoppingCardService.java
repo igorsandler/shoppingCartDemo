@@ -64,6 +64,16 @@ public class ShoppingCardService
                 proxy.getUri().toString());
     }
 
+    public void purchase(String customerId)
+    {
+        shoppingCartRepo.removeByCustomerId(customerId); // Dummy operation, should be replaced with real purchase workflow
+    }
+    
+    public void clean(String customerId)
+    {
+        shoppingCartRepo.removeByCustomerId(customerId);
+    }
+    
     public ShoppingCartEntry addProduct(String customerId, String productId)
     {
         ShoppingCartPk pk = new ShoppingCartPk();

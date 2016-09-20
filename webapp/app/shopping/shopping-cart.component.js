@@ -66,8 +66,20 @@ System.register(['angular2/core', '../customers/customer.service', '../shopping/
                 };
                 ShoppingCartComponent.prototype.addProduct = function (productId) {
                     var _this = this;
-                    console.log("removeProduct: " + productId);
+                    console.log("addProduct: " + productId);
                     this._shoppingCartService.addProduct(this.customerId, productId)
+                        .subscribe(function (response) { return _this.refresh(); }, function (error) { return _this.errorMessage = error; });
+                };
+                ShoppingCartComponent.prototype.purchase = function () {
+                    var _this = this;
+                    console.log("purchase");
+                    this._shoppingCartService.purchase(this.customerId)
+                        .subscribe(function (response) { return _this.refresh(); }, function (error) { return _this.errorMessage = error; });
+                };
+                ShoppingCartComponent.prototype.cancel = function () {
+                    var _this = this;
+                    console.log("purchase");
+                    this._shoppingCartService.cancel(this.customerId)
                         .subscribe(function (response) { return _this.refresh(); }, function (error) { return _this.errorMessage = error; });
                 };
                 ShoppingCartComponent = __decorate([
