@@ -55,17 +55,30 @@ export class ShoppingProductListComponent implements OnInit {
        console.log("refresh");
        this._productService.getProducts(this.pageNumber)
             .subscribe(
-                response => this.products = response._embedded.products,
+                response => { 
+                    this.products = response._embedded.products;
+                    for (let product of this.products)
+                    {
+                        product.quantity = 0;
+                    }
+                },
                 error => this.errorMessage = <any>error);
    }
    
-   addToShoppingCart(productId: string) : void
+   addToShoppingCart(productId: string,quantity : number) : void
    {
-       console.log("addToShoppingCart: "+productId);
-       this._shoppingCartService.addProduct(this.customerId,productId)
-         .subscribe(
+       console.log("addToShoppingCart: "+productId+ "quantity:"+quantity);
+       if(quantity >0)
+       {
+           for(let i=0; i<quantity;i++)
+           {
+                this._shoppingCartService.addProduct(this.customerId,productId)
+                .subscribe(
                 response => {;},
-                error => this.errorMessage = <any>error);
+                error => this.errorMessage = <any>error);   
+           }
+       
+       }
    } 
    
     onBack(): void {

@@ -17,6 +17,7 @@
                         <th>Product Name</th>
                         <th>Description</th>
                         <th>Price</th>
+                        <th>Quantity</th>
                         <th>Actions</th>
                      </tr>
                 </thead>
@@ -25,8 +26,9 @@
                         <td>{{ product.name }}</td>
                         <td>{{ product.description}}</td>
                         <td>{{ product.price | currency:'CAD':true:'1.2-2'}}</td>
+                        <td><input [(ngModel)]='product.quantity' id="movie" type="number" value="0"/></td>
                         <td>
-                            <a class='btn btn-default' (click)='addToShoppingCart(product.productId)' style='width:80px'>Add</a>
+                            <a class='btn btn-default' (click)='addToShoppingCart(product.productId,product.quantity)' style='width:80px'>Add</a>
                         </td>
                     </tr>
                 </tbody>

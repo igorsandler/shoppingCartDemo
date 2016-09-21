@@ -56,13 +56,23 @@ System.register(['angular2/core', '../products/product.service', 'angular2/route
                     var _this = this;
                     console.log("refresh");
                     this._productService.getProducts(this.pageNumber)
-                        .subscribe(function (response) { return _this.products = response._embedded.products; }, function (error) { return _this.errorMessage = error; });
+                        .subscribe(function (response) {
+                        _this.products = response._embedded.products;
+                        for (var _i = 0, _a = _this.products; _i < _a.length; _i++) {
+                            var product = _a[_i];
+                            product.quantity = 0;
+                        }
+                    }, function (error) { return _this.errorMessage = error; });
                 };
-                ShoppingProductListComponent.prototype.addToShoppingCart = function (productId) {
+                ShoppingProductListComponent.prototype.addToShoppingCart = function (productId, quantity) {
                     var _this = this;
-                    console.log("addToShoppingCart: " + productId);
-                    this._shoppingCartService.addProduct(this.customerId, productId)
-                        .subscribe(function (response) { ; }, function (error) { return _this.errorMessage = error; });
+                    console.log("addToShoppingCart: " + productId + "quantity:" + quantity);
+                    if (quantity > 0) {
+                        for (var i = 0; i < quantity; i++) {
+                            this._shoppingCartService.addProduct(this.customerId, productId)
+                                .subscribe(function (response) { ; }, function (error) { return _this.errorMessage = error; });
+                        }
+                    }
                 };
                 ShoppingProductListComponent.prototype.onBack = function () {
                     this._router.navigate(['ShoppingCart', { customerId: this.customerId }]);
