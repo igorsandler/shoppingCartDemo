@@ -1,15 +1,19 @@
-import { Component } from 'angular2/core';
+import { Component,ViewChild } from 'angular2/core';
 import { RouteParams, Router } from 'angular2/router';
 import { ICustomer } from '../customers/customer';
 import { CustomerService } from '../customers/customer.service';
 import { Response } from 'angular2/http';
 import { IShoppingSession } from './shopping-session';
+import { InfoComponent } from '../shared/info.component';
+import { ModalDialogInstance, ModalConfig, Modal, ICustomModal,YesNoModalContent, YesNoModal } from 'angular2/modal';
 
 @Component({
     templateUrl: 'app/shopping/shopping-session-login.component.html'
 })
 export class ShoppingSessionLoginComponent  {
     
+    //@ViewChild(ErrorMessage) errorMsg: ErrorMessage;  // ErrorMessage is a ViewChild
+
     pageTitle: string = 'Customer Login';
         
     shoppingSession: IShoppingSession = 
@@ -43,7 +47,15 @@ export class ShoppingSessionLoginComponent  {
                     this.shoppingSession.customer = response;
                     this._router.navigate(['ShoppingCart',{ customerId: this.shoppingSession.customerId}]);
                 },
-                error => this.errorMessage = <any>error);
+                error => 
+                {
+                    this._router.navigate(['InfoComponent',
+                    {
+                        title: "Error", 
+                        message: JSON.stringify(error)
+                    }]);
+                    
+                });
     }
 
 }

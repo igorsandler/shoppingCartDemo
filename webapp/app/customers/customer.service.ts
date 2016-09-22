@@ -50,7 +50,7 @@ export class CustomerService
     }
 
     private handleError(error: Response) {
-        console.error(error);
-        return Observable.throw(error.json().error || 'Server error');
+        console.error("Customer Service Error:" + error.status);
+        return Observable.throw(error);
     }
 }

@@ -29,6 +29,7 @@ System.register(['angular2/core', 'angular2/router', '../customers/customer.serv
                     this._routeParams = _routeParams;
                     this._router = _router;
                     this._customerService = _customerService;
+                    //@ViewChild(ErrorMessage) errorMsg: ErrorMessage;  // ErrorMessage is a ViewChild
                     this.pageTitle = 'Customer Login';
                     this.shoppingSession = {
                         customerId: "undefined",
@@ -45,7 +46,13 @@ System.register(['angular2/core', 'angular2/router', '../customers/customer.serv
                         .subscribe(function (response) {
                         _this.shoppingSession.customer = response;
                         _this._router.navigate(['ShoppingCart', { customerId: _this.shoppingSession.customerId }]);
-                    }, function (error) { return _this.errorMessage = error; });
+                    }, function (error) {
+                        _this._router.navigate(['InfoComponent',
+                            {
+                                title: "Error",
+                                message: JSON.stringify(error)
+                            }]);
+                    });
                 };
                 ShoppingSessionLoginComponent = __decorate([
                     core_1.Component({

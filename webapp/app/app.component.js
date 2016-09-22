@@ -1,4 +1,4 @@
-System.register(['angular2/core', './products/product-list.component', './products/product.service', './products/product-detail.component', './products/product-edit-form.component', './customers/customer-list.component', './customers/customer.service', './customers/customer-edit-form.component', './shopping/shopping-session-login.component', './shopping/shopping-cart.component', './shopping/shopping-cart.service', './shopping/shopping-product-list.component', 'rxjs/Rx', 'angular2/http', 'angular2/router', './home/welcome.component'], function(exports_1, context_1) {
+System.register(['angular2/core', './products/product-list.component', './products/product.service', './products/product-detail.component', './products/product-edit-form.component', './customers/customer-list.component', './customers/customer.service', './customers/customer-edit-form.component', './shopping/shopping-session-login.component', './shopping/shopping-cart.component', './shopping/shopping-cart.service', './shopping/shopping-product-list.component', 'rxjs/Rx', 'angular2/http', 'angular2/router', './home/welcome.component', './shared/info.component'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(['angular2/core', './products/product-list.component', './produc
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, product_list_component_1, product_service_1, product_detail_component_1, product_edit_form_component_1, customer_list_component_1, customer_service_1, customer_edit_form_component_1, shopping_session_login_component_1, shopping_cart_component_1, shopping_cart_service_1, shopping_product_list_component_1, http_1, router_1, welcome_component_1;
+    var core_1, product_list_component_1, product_service_1, product_detail_component_1, product_edit_form_component_1, customer_list_component_1, customer_service_1, customer_edit_form_component_1, shopping_session_login_component_1, shopping_cart_component_1, shopping_cart_service_1, shopping_product_list_component_1, http_1, router_1, welcome_component_1, info_component_1;
     var AppComponent;
     return {
         setters:[
@@ -59,6 +59,9 @@ System.register(['angular2/core', './products/product-list.component', './produc
             },
             function (welcome_component_1_1) {
                 welcome_component_1 = welcome_component_1_1;
+            },
+            function (info_component_1_1) {
+                info_component_1 = info_component_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
@@ -83,7 +86,8 @@ System.register(['angular2/core', './products/product-list.component', './produc
                         { path: '/customer-new', name: 'CustomerNewForm', component: customer_edit_form_component_1.CustomerEditFormComponent },
                         { path: '/shopping-login', name: 'ShoppingSessionLogin', component: shopping_session_login_component_1.ShoppingSessionLoginComponent },
                         { path: '/shopping-cart/:customerId', name: 'ShoppingCart', component: shopping_cart_component_1.ShoppingCartComponent },
-                        { path: '/shopping-cart-products/:customerId', name: 'ShoppingCartProducts', component: shopping_product_list_component_1.ShoppingProductListComponent }
+                        { path: '/shopping-cart-products/:customerId', name: 'ShoppingCartProducts', component: shopping_product_list_component_1.ShoppingProductListComponent },
+                        { path: '/info/:title/:message', name: 'InfoComponent', component: info_component_1.InfoComponent }
                     ]), 
                     __metadata('design:paramtypes', [])
                 ], AppComponent);

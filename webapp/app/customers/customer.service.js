@@ -58,8 +58,8 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable'], function(
                         .catch(this.handleError);
                 };
                 CustomerService.prototype.handleError = function (error) {
-                    console.error(error);
-                    return Observable_1.Observable.throw(error.json().error || 'Server error');
+                    console.error("Customer Service Error:" + error.status);
+                    return Observable_1.Observable.throw(error);
                 };
                 CustomerService = __decorate([
                     core_1.Injectable(), 

@@ -16,6 +16,7 @@ import 'rxjs/Rx';   // Load all features
 import { HTTP_PROVIDERS } from 'angular2/http';
 import { ROUTER_PROVIDERS, RouteConfig, ROUTER_DIRECTIVES} from 'angular2/router';
 import { WelcomeComponent } from './home/welcome.component';
+import { InfoComponent } from './shared/info.component';
 
 @Component({
     selector: 'pm-app',
@@ -51,7 +52,8 @@ import { WelcomeComponent } from './home/welcome.component';
   { path: '/customer-new', name: 'CustomerNewForm', component: CustomerEditFormComponent },    
   { path: '/shopping-login', name: 'ShoppingSessionLogin', component: ShoppingSessionLoginComponent },
   { path: '/shopping-cart/:customerId', name: 'ShoppingCart', component: ShoppingCartComponent },
-  { path: '/shopping-cart-products/:customerId', name: 'ShoppingCartProducts', component: ShoppingProductListComponent }   
+  { path: '/shopping-cart-products/:customerId', name: 'ShoppingCartProducts', component: ShoppingProductListComponent } 
+  { path: '/info/:title/:message', name: 'InfoComponent', component: InfoComponent }   
 ])
 export class AppComponent {
     pageTitle: string = 'Shopping Cart Demo';
