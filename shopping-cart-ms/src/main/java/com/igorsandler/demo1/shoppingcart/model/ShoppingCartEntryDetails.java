@@ -19,6 +19,8 @@ public class ShoppingCartEntryDetails implements Serializable
     }
 
     private Integer quantity;
+    
+    private Integer availableQuantity;
 
     private String customerId;
 
@@ -88,6 +90,16 @@ public class ShoppingCartEntryDetails implements Serializable
     public void setProductPrice(Float productPrice)
     {
         this.productPrice = productPrice;
+    }
+
+    public Integer getAvailableQuantity()
+    {
+        return availableQuantity;
+    }
+
+    public void setAvailableQuantity(Integer availableQuantity)
+    {
+        this.availableQuantity = availableQuantity;
     }
 
 }

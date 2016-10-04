@@ -8,6 +8,7 @@ package com.igorsandler.demo1.shoppingcart.controllers;
 import com.igorsandler.demo1.shoppingcart.model.Ack;
 import com.igorsandler.demo1.shoppingcart.model.ShoppingCartEntry;
 import com.igorsandler.demo1.shoppingcart.model.ShoppingCartEntryDetails;
+import com.igorsandler.demo1.shoppingcart.model.ShoppingCartPurchaseReport;
 import com.igorsandler.demo1.shoppingcart.services.ShoppingCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,9 +40,10 @@ public class ShoppingCartController
     }, method = RequestMethod.GET)
     public ShoppingCartEntry addProduct(
             @PathVariable() String customerId,
-            @RequestParam(value = "productId", required = true) String productId)
+            @RequestParam(value = "productId", required = true) String productId,
+            @RequestParam(value = "quantity", required = false, defaultValue = "1") Integer quantity)
     {
-        return shoppingCartService.addProduct(customerId, productId);
+        return shoppingCartService.addProduct(customerId, productId, quantity);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -51,9 +53,10 @@ public class ShoppingCartController
     }, method = RequestMethod.GET)
     public ShoppingCartEntry removeProduct(
             @PathVariable() String customerId,
-            @RequestParam(value = "productId", required = true) String productId)
+            @RequestParam(value = "productId", required = true) String productId,
+            @RequestParam(value = "quantity", required = false, defaultValue = "1") Integer quantity)
     {
-        return shoppingCartService.removeProduct(customerId, productId);
+        return shoppingCartService.removeProduct(customerId, productId,quantity);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -69,12 +72,35 @@ public class ShoppingCartController
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value =
     {
+        "/{customerId}/product/{productId}"
+    }, method = RequestMethod.GET)
+    public ShoppingCartEntryDetails getSingleEntryDetails(
+            @PathVariable("customerId") String customerId,
+            @PathVariable("productId") String productId) throws Exception
+    {
+        return shoppingCartService.getProduct(customerId, productId);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value =
+    {
+        "/{customerId}/entry/{productId}"
+    }, method = RequestMethod.GET)
+    public ShoppingCartEntry getSingleEntry(
+            @PathVariable("customerId") String customerId,
+            @PathVariable("productId") String productId) throws Exception
+    {
+        return shoppingCartService.getShoppingCartEntry(customerId, productId);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value =
+    {
         "/{customerId}/purchase"
     }, method = RequestMethod.GET)
-    public Ack purchase(@PathVariable() String customerId) throws Exception
+    public ShoppingCartPurchaseReport purchase(@PathVariable() String customerId) throws Exception
     {
-        shoppingCartService.purchase(customerId);
-         return new Ack(true);
+        return shoppingCartService.purchase(customerId);
     }
 
     @ResponseStatus(HttpStatus.OK)

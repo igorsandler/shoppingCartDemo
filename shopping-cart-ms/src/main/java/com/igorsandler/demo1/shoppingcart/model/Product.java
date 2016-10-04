@@ -26,6 +26,8 @@ public class Product implements Serializable
 
     private Float price;
 
+    private Integer quantity;
+
     public String getProductId()
     {
         return productId;
@@ -64,6 +66,16 @@ public class Product implements Serializable
     public void setPrice(Float price)
     {
         this.price = price;
+    }
+
+    public Integer getQuantity()
+    {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity)
+    {
+        this.quantity = quantity;
     }
 
 }

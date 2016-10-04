@@ -6,11 +6,14 @@
 package com.igorsandler.demo1.shoppingcart.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.igorsandler.demo1.product.shared.model.EPurchaseStatus;
+import com.igorsandler.demo1.product.shared.model.PurchaseResponse;
 import com.igorsandler.demo1.shoppingcart.client.ProductClient;
 import com.igorsandler.demo1.shoppingcart.model.Product;
 import com.igorsandler.demo1.shoppingcart.model.ShoppingCartEntry;
 import com.igorsandler.demo1.shoppingcart.model.ShoppingCartEntryDetails;
 import com.igorsandler.demo1.shoppingcart.model.ShoppingCartPk;
+import com.igorsandler.demo1.shoppingcart.model.ShoppingCartPurchaseReport;
 import com.igorsandler.demo1.shoppingcart.repo.ShoppingCartRepository;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -51,9 +55,37 @@ public class ShoppingCardService
     {
     }
 
-    public void purchase(String customerId)
+    public ShoppingCartPurchaseReport purchase(String customerId)
     {
-        shoppingCartRepo.removeByCustomerId(customerId); // Dummy operation, should be replaced with real purchase workflow
+        ShoppingCartPurchaseReport result = new ShoppingCartPurchaseReport();
+        Iterable<ShoppingCartEntry> scEntires = shoppingCartRepo.findByCustomerId(customerId);
+        if (scEntires != null)
+        {
+            Collection<PurchaseResponse> purchaseResponses = StreamSupport
+                    .stream(scEntires.spliterator(), false)
+                    .map(sce
+                            -> 
+                            {
+                                PurchaseResponse resp = productClient.purchase(sce.getProductId(), sce.getQuantity());
+                                if (resp.getStatus() == EPurchaseStatus.SUCCESS)
+                                {
+                                    shoppingCartRepo.delete(sce);
+                                }
+                                return resp;
+                    })
+                    .collect(Collectors.toList());
+
+            Double total = purchaseResponses
+                    .stream()
+                    .filter(pr -> pr.getStatus() == EPurchaseStatus.SUCCESS)
+                    .mapToDouble(pr -> pr.getRequestedQuantity() * pr.getPrice())
+                    .sum();
+
+            result.setTotal(total.floatValue());
+            result.setProducts(purchaseResponses);
+
+        }
+        return result;
     }
 
     public void clean(String customerId)
@@ -61,7 +93,14 @@ public class ShoppingCardService
         shoppingCartRepo.removeByCustomerId(customerId);
     }
 
-    public ShoppingCartEntry addProduct(String customerId, String productId)
+    /**
+     *
+     * @param customerId
+     * @param productId
+     * @param quantity
+     * @return
+     */
+    public ShoppingCartEntry addProduct(String customerId, String productId, Integer quantity)
     {
         ShoppingCartPk pk = new ShoppingCartPk();
         pk.setCustomerId(customerId);
@@ -72,21 +111,28 @@ public class ShoppingCardService
         {
             scEntry = new ShoppingCartEntry();
             scEntry.setPrimaryKey(pk);
-            scEntry.setQuantity(1);
+            scEntry.setQuantity(quantity);
             scEntry.setProductId(pk.getProductId());
             scEntry.setCustomerId(pk.getCustomerId());
             shoppingCartRepo.save(scEntry);
         } else
         {
             scEntry = shoppingCartRepo.findOne(pk);
-            scEntry.setQuantity(scEntry.getQuantity() + 1);
+            scEntry.setQuantity(scEntry.getQuantity() + quantity);
             shoppingCartRepo.save(scEntry);
         }
         return scEntry;
     }
 
-    public ShoppingCartEntry removeProduct(String customerId, String productId)
+    /**
+     *
+     * @param customerId
+     * @param productId
+     * @return
+     */
+    public ShoppingCartEntry removeProduct(String customerId, String productId, Integer quantity)
     {
+
         ShoppingCartPk pk = new ShoppingCartPk();
         pk.setCustomerId(customerId);
         pk.setProductId(productId);
@@ -95,14 +141,17 @@ public class ShoppingCardService
         if (shoppingCartRepo.exists(pk))
         {
             scEntry = shoppingCartRepo.findOne(pk);
-            if (scEntry.getQuantity() > 1)
+            if (quantity != null && quantity > 0)
             {
-                scEntry.setQuantity(scEntry.getQuantity() - 1);
-                shoppingCartRepo.save(scEntry);
-            } else
-            {
-                shoppingCartRepo.delete(pk);
-                scEntry.setQuantity(0);
+                if (scEntry.getQuantity() > quantity)
+                {
+                    scEntry.setQuantity(scEntry.getQuantity() - quantity);
+                    shoppingCartRepo.save(scEntry);
+                } else
+                {
+                    shoppingCartRepo.delete(pk);
+                    scEntry.setQuantity(0);
+                }
             }
         } else
         {
@@ -113,6 +162,34 @@ public class ShoppingCardService
             scEntry.setCustomerId(pk.getCustomerId());
         }
         return scEntry;
+    }
+
+    public ShoppingCartEntry getShoppingCartEntry(String customerId, String productId) throws Exception
+    {
+        return shoppingCartRepo.getByCustomerIdAndProductId(customerId, productId);
+    }
+
+    public ShoppingCartEntryDetails getProduct(String customerId, String productId) throws Exception
+    {
+        ShoppingCartEntry sce = shoppingCartRepo.getByCustomerIdAndProductId(customerId, productId);
+        if (sce != null)
+        {
+            Resource<Product> productRes = productClient.getProductsById(productId);
+            if (productRes != null)
+            {
+                Product product = productRes.getContent();
+                ShoppingCartEntryDetails scde = new ShoppingCartEntryDetails();
+                scde.setProductId(product.getProductId());
+                scde.setProductName(product.getName());
+                scde.setProductPrice(product.getPrice());
+                scde.setProductDescription(product.getDescription());
+                scde.setCustomerId(customerId);
+                scde.setQuantity(sce.getQuantity());
+                scde.setAvailableQuantity(product.getQuantity());
+                return scde;
+            }
+        }
+        return null;
     }
 
     public Iterable<ShoppingCartEntryDetails> getAllProducts(String customerId) throws Exception
@@ -148,6 +225,7 @@ public class ShoppingCardService
                                         scde.setProductDescription(product.getDescription());
                                         scde.setCustomerId(customerId);
                                         scde.setQuantity(sce.getQuantity());
+                                        scde.setAvailableQuantity(product.getQuantity());
                                         return scde;
                             })
                             .collect(Collectors.toList());
