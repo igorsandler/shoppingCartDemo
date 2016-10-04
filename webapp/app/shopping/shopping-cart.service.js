@@ -35,16 +35,22 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable'], function(
                         .do(function (data) { return console.log("getContent: " + JSON.stringify(data)); })
                         .catch(this.handleError);
                 };
-                ShoppingCartService.prototype.addProduct = function (customerId, productId) {
-                    return this._http.get(this._url + customerId + "/add?productId=" + productId)
+                ShoppingCartService.prototype.addProduct = function (customerId, productId, quantity) {
+                    return this._http.get(this._url + customerId + "/add?productId=" + productId + "&quantity=" + quantity)
                         .map(function (response) { return response.json(); })
-                        .do(function (data) { return console.log("getContent: " + JSON.stringify(data)); })
+                        .do(function (data) { return console.log("addProduct: " + JSON.stringify(data)); })
                         .catch(this.handleError);
                 };
-                ShoppingCartService.prototype.removeProduct = function (customerId, productId) {
-                    return this._http.get(this._url + customerId + "/remove?productId=" + productId)
+                ShoppingCartService.prototype.getShoppingCartEntry = function (customerId, productId) {
+                    return this._http.get(this._url + customerId + "/entry/" + productId)
                         .map(function (response) { return response.json(); })
-                        .do(function (data) { return console.log("getContent: " + JSON.stringify(data)); })
+                        .do(function (data) { return console.log("getShoppingCartEntry: " + JSON.stringify(data)); })
+                        .catch(this.handleError);
+                };
+                ShoppingCartService.prototype.removeProduct = function (customerId, productId, quantity) {
+                    return this._http.get(this._url + customerId + "/remove?productId=" + productId + "&quantity=" + quantity)
+                        .map(function (response) { return response.json(); })
+                        .do(function (data) { return console.log("removeProduct: " + JSON.stringify(data)); })
                         .catch(this.handleError);
                 };
                 ShoppingCartService.prototype.purchase = function (customerId) {

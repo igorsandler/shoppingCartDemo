@@ -1,5 +1,6 @@
 import { Injectable } from 'angular2/core';
 import { IShoppingCartEntry } from './shopping-cart-entry';
+import { IPurchaseResponse } from './shopping-purchase-response.ts';
 import { IShoppingCartDetailsEntry } from './shopping-cart-details-entry';
 import { Http, Response, RequestOptions, Headers } from 'angular2/http';
 import { Observable } from 'rxjs/Observable';
@@ -21,26 +22,34 @@ export class ShoppingCartService
             .catch(this.handleError);
     }
     
-    addProduct(customerId : string,productId : string): Observable<IShoppingCartEntry> 
+    addProduct(customerId : string,productId : string, quantity : number): Observable<IShoppingCartEntry> 
     {       
-       return this._http.get(this._url+customerId+"/add?productId="+productId)
+       return this._http.get(this._url+customerId+"/add?productId="+productId+"&quantity="+quantity)
             .map((response: Response) => <IShoppingCartEntry>response.json())
-            .do(data => console.log("getContent: " +  JSON.stringify(data)))
+            .do(data => console.log("addProduct: " +  JSON.stringify(data)))
             .catch(this.handleError);
     }
     
-    removeProduct(customerId : string,productId : string): Observable<IShoppingCartEntry> 
+    getShoppingCartEntry(customerId : string,productId : string): Observable<IShoppingCartEntry> 
     {       
-        return this._http.get(this._url+customerId+"/remove?productId="+productId)
+       return this._http.get(this._url+customerId+"/entry/"+productId)
             .map((response: Response) => <IShoppingCartEntry>response.json())
-            .do(data => console.log("getContent: " +  JSON.stringify(data)))
+            .do(data => console.log("getShoppingCartEntry: " +  JSON.stringify(data)))
             .catch(this.handleError);
     }
     
-    purchase(customerId : string): Observable<Response> 
+    removeProduct(customerId : string,productId : string, quantity : number): Observable<IShoppingCartEntry> 
+    {       
+        return this._http.get(this._url+customerId+"/remove?productId="+productId+"&quantity="+quantity)
+            .map((response: Response) => <IShoppingCartEntry>response.json())
+            .do(data => console.log("removeProduct: " +  JSON.stringify(data)))
+            .catch(this.handleError);
+    }
+    
+    purchase(customerId : string): Observable<IPurchaseResponse> 
     {       
         return this._http.get(this._url+customerId+"/purchase")
-            .map((response: Response) => <Response>response.json())
+            .map((response: Response) => <IPurchaseResponse>response.json())
             .catch(this.handleError);
     }
     

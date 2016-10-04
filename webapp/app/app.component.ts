@@ -8,6 +8,7 @@ import { CustomerService} from './customers/customer.service'
 import { CustomerEditFormComponent } from './customers/customer-edit-form.component';
 import { ShoppingSessionLoginComponent } from './shopping/shopping-session-login.component';
 import { ShoppingCartComponent } from './shopping/shopping-cart.component';
+import { ShoppingReportComponent } from './shopping/shopping-report.component';
 import { ShoppingCartService } from './shopping/shopping-cart.service';
 import { ShoppingProductListComponent } from './shopping/shopping-product-list.component';
 
@@ -52,8 +53,9 @@ import { InfoComponent } from './shared/info.component';
   { path: '/customer-new', name: 'CustomerNewForm', component: CustomerEditFormComponent },    
   { path: '/shopping-login', name: 'ShoppingSessionLogin', component: ShoppingSessionLoginComponent },
   { path: '/shopping-cart/:customerId', name: 'ShoppingCart', component: ShoppingCartComponent },
+  { path: '/purchase-report/:customerId', name: 'PurchaseReport', component: ShoppingReportComponent },
   { path: '/shopping-cart-products/:customerId', name: 'ShoppingCartProducts', component: ShoppingProductListComponent } 
-  { path: '/info/:title/:message', name: 'InfoComponent', component: InfoComponent }   
+  { path: '/info/:title/:message/:details', name: 'InfoComponent', component: InfoComponent }   
 ])
 export class AppComponent {
     pageTitle: string = 'Shopping Cart Demo';

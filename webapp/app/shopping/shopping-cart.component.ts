@@ -25,6 +25,7 @@ export class ShoppingCartComponent implements OnInit {
     
    constructor(private  _shoppingCartService : ShoppingCartService,
                private _routeParams: RouteParams,
+               private _router: Router,
                private _customerService : CustomerService)
    {
        this.customerId = this._routeParams.get('customerId');
@@ -67,28 +68,22 @@ export class ShoppingCartComponent implements OnInit {
    removeProduct(productId: string) : void
    {
        console.log("removeProduct: "+productId);
-       this._shoppingCartService.removeProduct(this.customerId,productId)
+       this._shoppingCartService.removeProduct(this.customerId,productId,1)
          .subscribe(
                 response => this.refresh(),
                 error => this.errorMessage = <any>error);
    } 
    
-   addProduct(productId: string) : void
+   addProduct(entry: IShoppingCartDetailsEntry) : void
    {
-       console.log("addProduct: "+productId);
-       this._shoppingCartService.addProduct(this.customerId,productId)
-         .subscribe(
-                response => this.refresh(),
-                error => this.errorMessage = <any>error);
-   } 
-   
-   purchase() : void
-   {
-       console.log("purchase");
-       this._shoppingCartService.purchase(this.customerId)
-         .subscribe(
-                response => this.refresh(),
-                error => this.errorMessage = <any>error);
+       if(entry.availableQuantity-entry.quantity > 0)
+       {
+            console.log("addProduct: "+entry.productId);
+            this._shoppingCartService.addProduct(this.customerId,entry.productId,1)
+                .subscribe(
+                        response => this.refresh(),
+                        error => this.errorMessage = <any>error);
+       }
    } 
    
    cancel() : void

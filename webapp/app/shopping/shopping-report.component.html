@@ -1,0 +1,39 @@
+<div class='panel panel-primary'>
+    <div class='panel-heading'>
+        {{pageTitle}}
+    </div>
+    <div class='panel-body'>
+        <div class='table-responsive'>
+            <table class='table' *ngIf='purchaseResponse && purchaseResponse.products.length'>
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Price</th>
+                        <th>Available Quantity</th>
+                        <th>Requested Quantity</th>
+                        <th>Remained Quantity</th>
+                        <th>Other</th>
+                     </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor='#pr of purchaseResponse.products'>
+                        <td>{{ pr.name}}</td>
+                        <td>{{ pr.description}}</td>
+                        <td>{{ pr.status}}</td>
+                        <td>{{ pr.price | currency:'CAD':true:'1.2-2'}}</td>
+                        <td>{{ pr.availableQuantity}}</td>
+                        <td>{{ pr.requestedQuantity}}</td>
+                        <td>{{ pr.remainingQuantity}}</td>
+                        <td>{{ pr.exception}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>    
+    <div class='panel-footer'>
+            <a class='btn btn-default' [routerLink]="['ShoppingCart',{customerId : customerId}]" style='width:150px'>Back</a>
+            <span style="float: right;" *ngIf='purchaseResponse && purchaseResponse.total'>Total: {{ purchaseResponse.total | currency:'CAD':true:'1.2-2'}}</span>
+    </div>
+</div>

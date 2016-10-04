@@ -8,20 +8,19 @@ import { Response } from 'angular2/http';
 export class InfoComponent  {
     pageTitle: string = 'Information';
     message: string;
+    details: string;
     
     constructor(private _routeParams: RouteParams,
                 private _router: Router) {
           this.pageTitle = this._routeParams.get('title');          
           this.message = this._routeParams.get('message');
+          this.details = this._routeParams.get('details');
     }
 
    ngOnInit() : void 
    {
    }
 
-    onBack(): void {
-         this._router.navigate(['Products']);
-    }
     
    
 }

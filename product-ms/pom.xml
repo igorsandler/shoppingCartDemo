@@ -54,6 +54,13 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         
+        <dependency>
+            <groupId>com.igorsandler.demo1</groupId>
+            <artifactId>product-model-lib</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        
     </dependencies>
     
 </project>

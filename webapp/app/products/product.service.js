@@ -30,7 +30,7 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable'], function(
                     this._productUrl = 'http://localhost:9000/product-service/products';
                 }
                 ProductService.prototype.getProducts = function (pageNumber) {
-                    return this._http.get(this._productUrl + "?page=" + pageNumber)
+                    return this._http.get(this._productUrl + "?sort=productId&productId.dir=asc&page=" + pageNumber)
                         .map(function (response) { return response.json(); })
                         .do(function (data) { return console.log("getProducts: " + JSON.stringify(data)); })
                         .catch(this.handleError);
@@ -58,8 +58,8 @@ System.register(['angular2/core', 'angular2/http', 'rxjs/Observable'], function(
                         .catch(this.handleError);
                 };
                 ProductService.prototype.handleError = function (error) {
-                    console.error(error);
-                    return Observable_1.Observable.throw(error.json().error || 'Server error');
+                    console.error("Product Service Error:" + error.status);
+                    return Observable_1.Observable.throw(error);
                 };
                 ProductService = __decorate([
                     core_1.Injectable(), 

@@ -42,6 +42,10 @@ public class Product implements Serializable
     @Column(name = "price")
     private Float price;
 
+    @NotNull
+    @Column(name = "quantity")
+    private Integer quantity;
+
     public String getProductId()
     {
         return productId;
@@ -80,6 +84,16 @@ public class Product implements Serializable
     public void setPrice(Float price)
     {
         this.price = price;
+    }
+
+    public Integer getQuantity()
+    {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity)
+    {
+        this.quantity = quantity;
     }
 
 }

@@ -52,8 +52,9 @@ export class ShoppingSessionLoginComponent  {
                     this._router.navigate(['InfoComponent',
                     {
                         title: "Error", 
-                        message: JSON.stringify(error)
-                    }]);
+                        message: "Customer login failure",
+                        details: JSON.stringify(error)
+                   }]);
                     
                 });
     }

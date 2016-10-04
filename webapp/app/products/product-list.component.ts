@@ -4,6 +4,7 @@ import { ProductService } from './product.service';
 import { IProductHalResponse } from './product.hal.response';
 import { ROUTER_DIRECTIVES} from 'angular2/router';
 import { Response } from 'angular2/http';
+import { RouteParams, Router } from 'angular2/router';
 
 
 @Component({
@@ -17,7 +18,9 @@ export class ProductListComponent implements OnInit {
     errorMessage: string;
     pageNumber : number = 0;
     
-   constructor(private  _productService : ProductService)
+   constructor(private _routeParams: RouteParams,
+                private _router: Router,
+                private  _productService : ProductService)
    {}
     
    
@@ -49,7 +52,16 @@ export class ProductListComponent implements OnInit {
        this._productService.getProducts(this.pageNumber)
             .subscribe(
                 response => this.products = response._embedded.products,
-                error => this.errorMessage = <any>error);
+                error => 
+                {
+                    this._router.navigate(['InfoComponent',
+                    {
+                        title: "Error", 
+                        message: "Product listing failure",
+                        details: JSON.stringify(error)
+                   }]);
+                    
+                });
    }
    
    deleteProduct(productId: string) : void
@@ -58,7 +70,16 @@ export class ProductListComponent implements OnInit {
        this._productService.deleteProductById(productId)
          .subscribe(
                 response => this.refresh(),
-                error => this.errorMessage = <any>error);
+                error => 
+                {
+                    this._router.navigate(['InfoComponent',
+                    {
+                        title: "Error", 
+                        message: "Adding new product failure",
+                        details: JSON.stringify(error)
+                   }]);
+                    
+                });
      }
     
 }

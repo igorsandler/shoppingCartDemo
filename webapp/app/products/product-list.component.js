@@ -10,7 +10,7 @@ System.register(['angular2/core', './product.service', 'angular2/router'], funct
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, product_service_1, router_1;
+    var core_1, product_service_1, router_1, router_2;
     var ProductListComponent;
     return {
         setters:[
@@ -22,10 +22,13 @@ System.register(['angular2/core', './product.service', 'angular2/router'], funct
             },
             function (router_1_1) {
                 router_1 = router_1_1;
+                router_2 = router_1_1;
             }],
         execute: function() {
             ProductListComponent = (function () {
-                function ProductListComponent(_productService) {
+                function ProductListComponent(_routeParams, _router, _productService) {
+                    this._routeParams = _routeParams;
+                    this._router = _router;
                     this._productService = _productService;
                     this.pageTitle = 'Product Management';
                     this.pageNumber = 0;
@@ -49,13 +52,27 @@ System.register(['angular2/core', './product.service', 'angular2/router'], funct
                     var _this = this;
                     console.log("refresh");
                     this._productService.getProducts(this.pageNumber)
-                        .subscribe(function (response) { return _this.products = response._embedded.products; }, function (error) { return _this.errorMessage = error; });
+                        .subscribe(function (response) { return _this.products = response._embedded.products; }, function (error) {
+                        _this._router.navigate(['InfoComponent',
+                            {
+                                title: "Error",
+                                message: "Product listing failure",
+                                details: JSON.stringify(error)
+                            }]);
+                    });
                 };
                 ProductListComponent.prototype.deleteProduct = function (productId) {
                     var _this = this;
                     console.log("deleteProduct: " + productId);
                     this._productService.deleteProductById(productId)
-                        .subscribe(function (response) { return _this.refresh(); }, function (error) { return _this.errorMessage = error; });
+                        .subscribe(function (response) { return _this.refresh(); }, function (error) {
+                        _this._router.navigate(['InfoComponent',
+                            {
+                                title: "Error",
+                                message: "Adding new product failure",
+                                details: JSON.stringify(error)
+                            }]);
+                    });
                 };
                 ProductListComponent = __decorate([
                     core_1.Component({
@@ -63,7 +80,7 @@ System.register(['angular2/core', './product.service', 'angular2/router'], funct
                         styleUrls: ['app/products/product-list.component.css'],
                         directives: [router_1.ROUTER_DIRECTIVES]
                     }), 
-                    __metadata('design:paramtypes', [product_service_1.ProductService])
+                    __metadata('design:paramtypes', [router_2.RouteParams, router_2.Router, product_service_1.ProductService])
                 ], ProductListComponent);
                 return ProductListComponent;
             }());

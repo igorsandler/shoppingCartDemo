@@ -34,22 +34,33 @@ System.register(['angular2/core', 'angular2/router', './product.service'], funct
                         productId: "unknown",
                         name: "unknown",
                         description: "unknown",
-                        price: 0.0
+                        price: 0.0,
+                        quantity: 0
                     };
-                    //        this.productId = this._routeParams.get('id');
+                    this.productId = this._routeParams.get('id');
                     //        this.pageTitle += ": " +this.productId;
                 }
                 ProductEditFormComponent.prototype.ngOnInit = function () {
+                    var _this = this;
+                    this._productService.getProductById(this.productId)
+                        .subscribe(function (response) { return _this.product = response; }, function (error) { return _this.errorMessage = error; });
                 };
                 ProductEditFormComponent.prototype.onBack = function () {
                     this._router.navigate(['Products']);
                 };
                 ProductEditFormComponent.prototype.onSubmit = function () {
                     var _this = this;
-                    console.log("Delete product: " + this.productId);
+                    console.log("Add product: " + this.productId);
                     var newProduct;
                     this._productService.createProduct(this.product)
-                        .subscribe(function (response) { return newProduct = response; }, function (error) { return _this.errorMessage = error; });
+                        .subscribe(function (response) { return newProduct = response; }, function (error) {
+                        _this._router.navigate(['InfoComponent',
+                            {
+                                title: "Error",
+                                message: "Adding new product failure",
+                                details: JSON.stringify(error)
+                            }]);
+                    });
                     this._router.navigate(['Products']);
                 };
                 ProductEditFormComponent = __decorate([

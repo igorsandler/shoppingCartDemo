@@ -1,3 +1,10 @@
 thead {
     color: #337AB7;
 }
+tr.incart {
+    color: #337AB7;font-weight: bold;
+}
+tr.notincart {
+    color: black;
+}
+

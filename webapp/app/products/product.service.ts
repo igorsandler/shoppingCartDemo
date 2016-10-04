@@ -15,7 +15,7 @@ export class ProductService
 
     getProducts(pageNumber: number): Observable<IProductHalResponse> 
     {       
-        return this._http.get(this._productUrl+"?page="+pageNumber)
+        return this._http.get(this._productUrl+"?sort=productId&productId.dir=asc&page="+pageNumber)
             .map((response: Response) => <IProductHalResponse>response.json())
             .do(data => console.log("getProducts: " +  JSON.stringify(data)))
             .catch(this.handleError);
@@ -50,7 +50,7 @@ export class ProductService
     }
 
     private handleError(error: Response) {
-        console.error(error);
-        return Observable.throw(error.json().error || 'Server error');
+        console.error("Product Service Error:" + error.status);
+        return Observable.throw(error);
     }
 }

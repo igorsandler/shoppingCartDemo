@@ -28,10 +28,11 @@ System.register(['angular2/core', '../customers/customer.service', '../shopping/
             }],
         execute: function() {
             ShoppingCartComponent = (function () {
-                function ShoppingCartComponent(_shoppingCartService, _routeParams, _customerService) {
+                function ShoppingCartComponent(_shoppingCartService, _routeParams, _router, _customerService) {
                     var _this = this;
                     this._shoppingCartService = _shoppingCartService;
                     this._routeParams = _routeParams;
+                    this._router = _router;
                     this._customerService = _customerService;
                     this.pageTitle = 'Shopping Cart';
                     this.totalPrice = 0;
@@ -61,20 +62,16 @@ System.register(['angular2/core', '../customers/customer.service', '../shopping/
                 ShoppingCartComponent.prototype.removeProduct = function (productId) {
                     var _this = this;
                     console.log("removeProduct: " + productId);
-                    this._shoppingCartService.removeProduct(this.customerId, productId)
+                    this._shoppingCartService.removeProduct(this.customerId, productId, 1)
                         .subscribe(function (response) { return _this.refresh(); }, function (error) { return _this.errorMessage = error; });
                 };
-                ShoppingCartComponent.prototype.addProduct = function (productId) {
+                ShoppingCartComponent.prototype.addProduct = function (entry) {
                     var _this = this;
-                    console.log("addProduct: " + productId);
-                    this._shoppingCartService.addProduct(this.customerId, productId)
-                        .subscribe(function (response) { return _this.refresh(); }, function (error) { return _this.errorMessage = error; });
-                };
-                ShoppingCartComponent.prototype.purchase = function () {
-                    var _this = this;
-                    console.log("purchase");
-                    this._shoppingCartService.purchase(this.customerId)
-                        .subscribe(function (response) { return _this.refresh(); }, function (error) { return _this.errorMessage = error; });
+                    if (entry.availableQuantity - entry.quantity > 0) {
+                        console.log("addProduct: " + entry.productId);
+                        this._shoppingCartService.addProduct(this.customerId, entry.productId, 1)
+                            .subscribe(function (response) { return _this.refresh(); }, function (error) { return _this.errorMessage = error; });
+                    }
                 };
                 ShoppingCartComponent.prototype.cancel = function () {
                     var _this = this;
@@ -88,7 +85,7 @@ System.register(['angular2/core', '../customers/customer.service', '../shopping/
                         styleUrls: ['app/shopping/shopping-cart.component.css'],
                         directives: [router_1.ROUTER_DIRECTIVES]
                     }), 
-                    __metadata('design:paramtypes', [shopping_cart_service_1.ShoppingCartService, router_1.RouteParams, customer_service_1.CustomerService])
+                    __metadata('design:paramtypes', [shopping_cart_service_1.ShoppingCartService, router_1.RouteParams, router_1.Router, customer_service_1.CustomerService])
                 ], ShoppingCartComponent);
                 return ShoppingCartComponent;
             }());

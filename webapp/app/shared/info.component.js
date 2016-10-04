@@ -28,11 +28,9 @@ System.register(['angular2/core', 'angular2/router'], function(exports_1, contex
                     this.pageTitle = 'Information';
                     this.pageTitle = this._routeParams.get('title');
                     this.message = this._routeParams.get('message');
+                    this.details = this._routeParams.get('details');
                 }
                 InfoComponent.prototype.ngOnInit = function () {
-                };
-                InfoComponent.prototype.onBack = function () {
-                    this._router.navigate(['Products']);
                 };
                 InfoComponent = __decorate([
                     core_1.Component({

@@ -17,7 +17,8 @@ export class ProductEditFormComponent  {
         productId: "unknown",
         name: "unknown",
         description: "unknown",
-        price: 0.0
+        price: 0.0,
+        quantity : 0
     };
     
     errorMessage: string;
@@ -26,12 +27,16 @@ export class ProductEditFormComponent  {
     constructor(private _routeParams: RouteParams,
                 private _router: Router,
                 private _productService : ProductService) {
-  //        this.productId = this._routeParams.get('id');
+       this.productId = this._routeParams.get('id');
   //        this.pageTitle += ": " +this.productId;
     }
 
    ngOnInit() : void 
    {
+       this._productService.getProductById(this.productId)
+            .subscribe(
+                response => this.product = response,
+                error => this.errorMessage = <any>error);
    }
 
     onBack(): void {
@@ -39,12 +44,21 @@ export class ProductEditFormComponent  {
     }
     
     onSubmit(): void {
-        console.log("Delete product: "+this.productId);
+        console.log("Add product: "+this.productId);
         let newProduct: IProduct;
         this._productService.createProduct(this.product)
         .subscribe(
                 response => newProduct = response,
-                error => this.errorMessage = <any>error);
+                error => 
+                {
+                    this._router.navigate(['InfoComponent',
+                    {
+                        title: "Error", 
+                        message: "Adding new product failure",
+                        details: JSON.stringify(error)
+                   }]);
+                    
+                });
         this._router.navigate(['Products']);
     }
 

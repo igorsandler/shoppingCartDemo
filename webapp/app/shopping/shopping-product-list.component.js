@@ -58,20 +58,34 @@ System.register(['angular2/core', '../products/product.service', 'angular2/route
                     this._productService.getProducts(this.pageNumber)
                         .subscribe(function (response) {
                         _this.products = response._embedded.products;
+                        var _loop_1 = function(product) {
+                            product.quantityInCart = 0;
+                            product.purchaseQuantity = 0;
+                            _this._shoppingCartService.getShoppingCartEntry(_this.customerId, product.productId)
+                                .subscribe(function (response2) {
+                                product.quantityInCart = response2.quantity;
+                            }, function (error) { return _this.errorMessage = error; });
+                        };
                         for (var _i = 0, _a = _this.products; _i < _a.length; _i++) {
                             var product = _a[_i];
-                            product.quantity = 0;
+                            _loop_1(product);
                         }
                     }, function (error) { return _this.errorMessage = error; });
                 };
-                ShoppingProductListComponent.prototype.addToShoppingCart = function (productId, quantity) {
+                ShoppingProductListComponent.prototype.addToShoppingCart = function (product) {
                     var _this = this;
-                    console.log("addToShoppingCart: " + productId + "quantity:" + quantity);
-                    if (quantity > 0) {
-                        for (var i = 0; i < quantity; i++) {
-                            this._shoppingCartService.addProduct(this.customerId, productId)
-                                .subscribe(function (response) { ; }, function (error) { return _this.errorMessage = error; });
-                        }
+                    console.log("addToShoppingCart: " + product.productId + "quantity:" + product.quantity);
+                    if (product.purchaseQuantity > 0 && product.purchaseQuantity <= product.quantity - product.quantityInCart) {
+                        this._shoppingCartService.addProduct(this.customerId, product.productId, product.purchaseQuantity)
+                            .subscribe(function (response) { return _this.refresh(); }, function (error) { return _this.errorMessage = error; });
+                    }
+                };
+                ShoppingProductListComponent.prototype.removeFromShoppingCart = function (product) {
+                    var _this = this;
+                    console.log("removeFromShoppingCart: " + product.productId + "quantity:" + product.quantity);
+                    if (product.purchaseQuantity > 0 && product.purchaseQuantity <= product.quantityInCart) {
+                        this._shoppingCartService.removeProduct(this.customerId, product.productId, product.purchaseQuantity)
+                            .subscribe(function (response) { return _this.refresh(); }, function (error) { return _this.errorMessage = error; });
                     }
                 };
                 ShoppingProductListComponent.prototype.onBack = function () {

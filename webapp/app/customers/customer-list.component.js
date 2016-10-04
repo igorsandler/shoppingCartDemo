@@ -10,7 +10,7 @@ System.register(['angular2/core', './customer.service', 'angular2/router'], func
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, customer_service_1, router_1;
+    var core_1, customer_service_1, router_1, router_2;
     var CustomerListComponent;
     return {
         setters:[
@@ -22,10 +22,13 @@ System.register(['angular2/core', './customer.service', 'angular2/router'], func
             },
             function (router_1_1) {
                 router_1 = router_1_1;
+                router_2 = router_1_1;
             }],
         execute: function() {
             CustomerListComponent = (function () {
-                function CustomerListComponent(_CustomerService) {
+                function CustomerListComponent(_routeParams, _router, _CustomerService) {
+                    this._routeParams = _routeParams;
+                    this._router = _router;
                     this._CustomerService = _CustomerService;
                     this.pageTitle = 'Customer Management';
                     this.pageNumber = 0;
@@ -50,13 +53,27 @@ System.register(['angular2/core', './customer.service', 'angular2/router'], func
                     var _this = this;
                     console.log("refresh");
                     this._CustomerService.getCustomers(this.pageNumber)
-                        .subscribe(function (response) { return _this.customers = response._embedded.customers; }, function (error) { return _this.errorMessage = error; });
+                        .subscribe(function (response) { return _this.customers = response._embedded.customers; }, function (error) {
+                        _this._router.navigate(['InfoComponent',
+                            {
+                                title: "Error",
+                                message: "Customer Listing failed",
+                                details: JSON.stringify(error)
+                            }]);
+                    });
                 };
                 CustomerListComponent.prototype.deleteCustomer = function (customerId) {
                     var _this = this;
                     console.log("deleteProduct: " + customerId);
                     this._CustomerService.deleteCustomerById(customerId)
-                        .subscribe(function (response) { return _this.refresh(); }, function (error) { return _this.errorMessage = error; });
+                        .subscribe(function (response) { return _this.refresh(); }, function (error) {
+                        _this._router.navigate(['InfoComponent',
+                            {
+                                title: "Error",
+                                message: "Delete customer failure",
+                                details: JSON.stringify(error)
+                            }]);
+                    });
                 };
                 CustomerListComponent = __decorate([
                     core_1.Component({
@@ -64,7 +81,7 @@ System.register(['angular2/core', './customer.service', 'angular2/router'], func
                         styleUrls: ['app/customers/customer-list.component.css'],
                         directives: [router_1.ROUTER_DIRECTIVES]
                     }), 
-                    __metadata('design:paramtypes', [customer_service_1.CustomerService])
+                    __metadata('design:paramtypes', [router_2.RouteParams, router_2.Router, customer_service_1.CustomerService])
                 ], CustomerListComponent);
                 return CustomerListComponent;
             }());

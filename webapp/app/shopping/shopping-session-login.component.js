@@ -50,7 +50,8 @@ System.register(['angular2/core', 'angular2/router', '../customers/customer.serv
                         _this._router.navigate(['InfoComponent',
                             {
                                 title: "Error",
-                                message: JSON.stringify(error)
+                                message: "Customer login failure",
+                                details: JSON.stringify(error)
                             }]);
                     });
                 };

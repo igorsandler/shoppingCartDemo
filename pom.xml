@@ -21,6 +21,7 @@
         <module>router-ms</module>
         <module>shopping-cart-ms</module>
         <module>config-ms</module>
+        <module>product-model-lib</module>
     </modules>
     
     

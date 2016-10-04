@@ -4,6 +4,7 @@ import { CustomerService } from './customer.service';
 import { ICustomerHalResponse } from './customer.hal.response';
 import { ROUTER_DIRECTIVES} from 'angular2/router';
 import { Response } from 'angular2/http';
+import { RouteParams, Router } from 'angular2/router';
 
 
 @Component({
@@ -18,7 +19,9 @@ export class CustomerListComponent implements OnInit {
     pageNumber : number = 0;
     numOfPages : number = 1;
     
-   constructor(private  _CustomerService : CustomerService)
+   constructor(private _routeParams: RouteParams,
+               private _router: Router,
+               private  _CustomerService : CustomerService)
    {}
     
    
@@ -50,7 +53,16 @@ export class CustomerListComponent implements OnInit {
        this._CustomerService.getCustomers(this.pageNumber)
             .subscribe(
                 response => this.customers = response._embedded.customers,
-                error => this.errorMessage = <any>error);
+                error => 
+                {
+                    this._router.navigate(['InfoComponent',
+                    {
+                        title: "Error", 
+                        message: "Customer Listing failed",
+                        details: JSON.stringify(error)
+                   }]);
+                    
+                });
    }
    
    deleteCustomer(customerId: string) : void
@@ -59,7 +71,16 @@ export class CustomerListComponent implements OnInit {
        this._CustomerService.deleteCustomerById(customerId)
          .subscribe(
                 response => this.refresh(),
-                error => this.errorMessage = <any>error);
+                error => 
+                {
+                    this._router.navigate(['InfoComponent',
+                    {
+                        title: "Error", 
+                        message: "Delete customer failure",
+                        details: JSON.stringify(error)
+                   }]);
+                    
+                });
      }
     
 }

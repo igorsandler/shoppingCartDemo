@@ -59,26 +59,42 @@ export class ShoppingProductListComponent implements OnInit {
                     this.products = response._embedded.products;
                     for (let product of this.products)
                     {
-                        product.quantity = 0;
+                        product.quantityInCart = 0;
+                        product.purchaseQuantity = 0;
+                        this._shoppingCartService.getShoppingCartEntry(this.customerId,product.productId)
+                        .subscribe(
+                            response2=>
+                            {
+                                product.quantityInCart = response2.quantity; 
+                            },
+                            error => this.errorMessage = <any>error);                          
                     }
                 },
                 error => this.errorMessage = <any>error);
    }
    
-   addToShoppingCart(productId: string,quantity : number) : void
+   addToShoppingCart(product: IProduct) : void
    {
-       console.log("addToShoppingCart: "+productId+ "quantity:"+quantity);
-       if(quantity >0)
+       console.log("addToShoppingCart: "+product.productId+ "quantity:"+product.quantity);
+       if(product.purchaseQuantity >0 && product.purchaseQuantity <= product.quantity - product.quantityInCart )
        {
-           for(let i=0; i<quantity;i++)
-           {
-                this._shoppingCartService.addProduct(this.customerId,productId)
-                .subscribe(
-                response => {;},
-                error => this.errorMessage = <any>error);   
-           }
-       
-       }
+          this._shoppingCartService.addProduct(this.customerId,product.productId,product.purchaseQuantity)
+          .subscribe(
+           response => this.refresh(),
+           error => this.errorMessage = <any>error);   
+        }
+   } 
+   
+   removeFromShoppingCart(product: IProduct) : void
+   {
+       console.log("removeFromShoppingCart: "+product.productId+ "quantity:"+product.quantity);
+       if(product.purchaseQuantity >0 && product.purchaseQuantity <= product.quantityInCart)
+       {
+          this._shoppingCartService.removeProduct(this.customerId,product.productId,product.purchaseQuantity)
+          .subscribe(
+           response => this.refresh(),
+           error => this.errorMessage = <any>error);   
+        }
    } 
    
     onBack(): void {

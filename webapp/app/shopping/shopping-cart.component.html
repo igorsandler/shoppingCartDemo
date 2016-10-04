@@ -10,7 +10,8 @@
                         <th>Product Name</th>
                         <th>Description</th>
                         <th>Price</th>
-                        <th>Quantity</th>
+                        <th>Available Quantity</th>
+                        <th>Quantity In Cart</th>
                         <th>Actions</th>
                      </tr>
                 </thead>
@@ -19,9 +20,10 @@
                         <td>{{ e.productName}}</td>
                         <td>{{ e.productDescription}}</td>
                         <td>{{ e.productPrice | currency:'CAD':true:'1.2-2'}}</td>
+                        <td>{{ e.availableQuantity}}</td>
                         <td>{{ e.quantity}}</td>
                         <td>
-                            <a class='btn btn-default' (click)='addProduct(e.productId)' style='width:40px'>+</a>
+                            <a class='btn btn-default' (click)='addProduct(e)' style='width:40px'>+</a>
                             <a class='btn btn-default' (click)='removeProduct(e.productId)' style='width:40px'>-</a>
                         </td>
                     </tr>
@@ -31,7 +33,7 @@
     </div>    
     <div class='panel-footer'>
             <a class='btn btn-default' [routerLink]="['ShoppingCartProducts',{customerId : customerId}]" style='width:150px'>Add Product</a>
-            <a class='btn btn-default' (click)='purchase()' style='width:150px'>Purchase</a>
+            <a class='btn btn-default' [routerLink]="['PurchaseReport',{customerId : customerId}]" style='width:150px'>Purchase</a>
             <a class='btn btn-default' (click)='cancel()' style='width:150px'>Cancel</a>
             <span style="float: right;">Total: {{ totalPrice | currency:'CAD':true:'1.2-2'}}</span>
     </div>

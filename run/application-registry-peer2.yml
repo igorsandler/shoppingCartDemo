@@ -8,6 +8,10 @@ server:
 eureka:
   instance:
      hostname: eureka.peer2	
+     leaseRenewalIntervalInSeconds: 1
+     leaseExpirationDurationInSeconds: 2
+  server:
+     enableSelfPreservation: true
   client:
      registerWithEureka: true
      fetchRegistry: true

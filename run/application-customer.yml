@@ -32,4 +32,5 @@ eureka:
         enabled: true
      serviceUrl:
         defaultZone: http://eureka.peer2:8762/eureka,http://eureka.peer1:8761/eureka
-
+        leaseRenewalIntervalInSeconds: 1
+        leaseExpirationDurationInSeconds: 2

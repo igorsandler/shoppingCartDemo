@@ -17,18 +17,25 @@
                         <th>Product Name</th>
                         <th>Description</th>
                         <th>Price</th>
-                        <th>Quantity</th>
+                        <th>Available Quantity</th>
+                        <th>Quantity In Cart</th>
+                        <th>Purchase Quantity</th>
                         <th>Actions</th>
                      </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor='#product of products'>
+                    <tr *ngFor='#product of products'  [ngClass]="{incart: product.quantityInCart>0}">
                         <td>{{ product.name }}</td>
                         <td>{{ product.description}}</td>
                         <td>{{ product.price | currency:'CAD':true:'1.2-2'}}</td>
-                        <td><input [(ngModel)]='product.quantity' id="movie" type="number" value="0"/></td>
+                        <td>{{ product.quantity }}</td>
+                        <td>{{ product.quantityInCart }}</td>
+                        <td><input [(ngModel)]='product.purchaseQuantity' id="purchaseQuantity" type="number" value="0" min="0" style='width:60px'/></td>
                         <td>
-                            <a class='btn btn-default' (click)='addToShoppingCart(product.productId,product.quantity)' style='width:80px'>Add</a>
+                            <a class='btn btn-default' (click)='addToShoppingCart(product)' style='width:60px'>Add</a>
+                        </td>
+                        <td>
+                            <a class='btn btn-default' (click)='removeFromShoppingCart(product)' style='width:80px'>Remove</a>
                         </td>
                     </tr>
                 </tbody>
